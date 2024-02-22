@@ -142,6 +142,8 @@ CommonUIShader commonUI;
 button testButton;
 visualFFT visual_fft;
 double volumeLevel = 0;
+WavPlayer player("test.wav");
+
 bool initGL()
 {
 	//Success flag
@@ -156,7 +158,7 @@ bool initGL()
 	commonUI.use();
 
 	testButton.init(100, 100, 100, 100, "forward.png", &commonUI);
-	visual_fft.init(100, 200, 100, 100, &cacaGL);
+	visual_fft.init(100, 200, 100, 100, &cacaGL, player.fftBins);
 
 	// Set the texture parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -221,72 +223,9 @@ void close()
 	SDL_Quit();
 }
 
-void printProgramLog(GLuint program)
-{
-	//Make sure name is shader
-	if (glIsProgram(program))
-	{
-		//Program log length
-		int infoLogLength = 0;
-		int maxLength = infoLogLength;
-
-		//Get info string length
-		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
-
-		//Allocate string
-		char* infoLog = new char[maxLength];
-
-		//Get info log
-		glGetProgramInfoLog(program, maxLength, &infoLogLength, infoLog);
-		if (infoLogLength > 0)
-		{
-			//Print Log
-			printf("%s\n", infoLog);
-		}
-
-		//Deallocate string
-		delete[] infoLog;
-	}
-	else
-	{
-		printf("Name %d is not a program\n", program);
-	}
-}
-
-void printShaderLog(GLuint shader)
-{
-	//Make sure name is shader
-	if (glIsShader(shader))
-	{
-		//Shader log length
-		int infoLogLength = 0;
-		int maxLength = infoLogLength;
-
-		//Get info string length
-		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
-
-		//Allocate string
-		char* infoLog = new char[maxLength];
-
-		//Get info log
-		glGetShaderInfoLog(shader, maxLength, &infoLogLength, infoLog);
-		if (infoLogLength > 0)
-		{
-			//Print Log
-			printf("%s\n", infoLog);
-		}
-
-		//Deallocate string
-		delete[] infoLog;
-	}
-	else
-	{
-		printf("Name %d is not a shader\n", shader);
-	}
-}
-
 int main(int argc, char* args[])
 {
+	player.init();
 	//Start up SDL and create window
 	if (!init())
 	{
@@ -303,10 +242,8 @@ int main(int argc, char* args[])
 		//Enable text input
 		//SDL_StartTextInput();
 
-		WavPlayer player("test.wav");
-		if (player.init()) {
 			
-		}
+		
 		//While application is running
 		while (!quit)
 		{
@@ -333,6 +270,7 @@ int main(int argc, char* args[])
 
 			player.play();
 			volumeLevel = player.processAudio();
+			//visual_fft.
 
 			SDL_GL_SwapWindow(gWindow);
 			//Update screen

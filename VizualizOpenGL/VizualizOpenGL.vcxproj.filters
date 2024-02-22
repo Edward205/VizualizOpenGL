@@ -13,13 +13,31 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\ext">
+      <UniqueIdentifier>{7dead565-b503-4b97-a35d-022375887f5b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="VizualizOpenGL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="include\glad\glad.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="include\kfc.c">
+      <Filter>Source Files\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="include\kiss_fft.c">
+      <Filter>Source Files\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="include\kiss_fftnd.c">
+      <Filter>Source Files\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="include\kiss_fftndr.c">
+      <Filter>Source Files\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="include\kiss_fftr.c">
+      <Filter>Source Files\ext</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

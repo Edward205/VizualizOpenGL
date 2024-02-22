@@ -5,7 +5,7 @@ in vec3 ourColor;
 in vec2 TexCoord;
 
 layout(std140) uniform MyBlock{
-    float myArray[50];
+    float myArray[512];
 };
 
 uniform vec2 xy;

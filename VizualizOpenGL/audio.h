@@ -1,9 +1,12 @@
 #include <iostream>
 #include <portaudio.h>
 #include <sndfile.h>
+#include "kiss_fft.h"
 
 class WavPlayer {
 public:
+    float *fftBins;
+
     WavPlayer(const char* filename) : filename(filename), sndfile(nullptr), stream(nullptr) {}
 
     bool init() {
@@ -36,6 +39,13 @@ public:
         // Allocate the buffer dynamically based on sfinfo
         buffer = new float[FRAMES_PER_BUFFER * sfinfo.channels];
 
+        // Configure KISS FFT
+        fftCfg = kiss_fft_alloc(FRAMES_PER_BUFFER, 0, nullptr, nullptr);
+        fftInput = new kiss_fft_cpx[FRAMES_PER_BUFFER];
+        fftOutput = new kiss_fft_cpx[FRAMES_PER_BUFFER];
+
+        fftBins = new float[FRAMES_PER_BUFFER];
+
         // Start PortAudio stream
         Pa_StartStream(stream);
         return true;
@@ -46,8 +56,19 @@ public:
         // Read and play the WAV file
         if (sf_readf_float(sndfile, buffer, FRAMES_PER_BUFFER) > 0) {
             Pa_WriteStream(stream, buffer, FRAMES_PER_BUFFER);
-        }
 
+            // Prepare the input for FFT
+            for (sf_count_t i = 0; i < FRAMES_PER_BUFFER; ++i) {
+                fftInput[i].r = static_cast<float>(buffer[i]);
+                fftInput[i].i = 0.0f;
+            }
+
+            // Run FFT
+            kiss_fft(fftCfg, fftInput, fftOutput);
+            for(int i = 0; i < FRAMES_PER_BUFFER; ++i)
+                fftBins[i] = sqrt(fftOutput[i].r * fftOutput[i].r + fftOutput[i].i * fftOutput[i].i) * 100;
+
+        }
     }
 
     double processAudio() {
@@ -78,6 +99,8 @@ public:
         if (sndfile) {
             sf_close(sndfile);
         }
+
+        delete fftBins;
     }
 
 private:
@@ -87,6 +110,10 @@ private:
     PaStream* stream;
     PaStreamParameters outputParameters;
     float* buffer; // Dynamically allocated buffer
+    kiss_fft_cfg fftCfg;
+    kiss_fft_cpx* fftInput;
+    kiss_fft_cpx* fftOutput;
+
 
     static constexpr int SAMPLE_RATE = 44100;
     static constexpr int FRAMES_PER_BUFFER = 512;
