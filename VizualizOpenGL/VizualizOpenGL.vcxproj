@@ -146,6 +146,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="include\glad\glad.c" />
+    <ClCompile Include="include\kfc.c" />
+    <ClCompile Include="include\kiss_fft.c" />
+    <ClCompile Include="include\kiss_fftnd.c" />
+    <ClCompile Include="include\kiss_fftndr.c" />
+    <ClCompile Include="include\kiss_fftr.c" />
     <ClCompile Include="VizualizOpenGL.cpp" />
   </ItemGroup>
   <ItemGroup>

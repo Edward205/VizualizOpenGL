@@ -5,12 +5,15 @@ class visualFFT {
 public:
     GLuint gProgramID;
 
-	bool init(int x, int y, int width, int height, CommonGL *commonGL)
+    float *myArray;
+	bool init(int x, int y, int width, int height, CommonGL *commonGL, float *fftBins)
 	{
-        float myArray[] = { 0.2f, 0.2f, 0.3f, 0.7f, 0.2f, 0.8f, 0.9f, 1.0f, 0.4f, 0.5f,0.2f, 0.2f, 0.3f, 0.7f, 0.2f, 0.8f, 0.9f, 1.0f, 0.4f, 0.5f,0.2f, 0.2f, 0.3f, 0.7f, 0.2f, 0.8f, 0.9f, 1.0f, 0.4f, 0.5f,0.2f, 0.2f, 0.3f, 0.7f, 0.2f, 0.8f, 0.9f, 1.0f, 0.4f, 0.5f,0.2f, 0.2f, 0.3f, 0.7f, 0.2f, 0.8f, 0.9f, 1.0f, 0.4f, 0.5f };
-
+        this->myArray = fftBins;
         this->commonGL = commonGL;
-
+        myArray[5] = 0.5f;
+        myArray[6] = 0.2f;
+        myArray[7] = 0.8f;
+        myArray[8] = 0.4f;
         // Program
         gProgramID = glCreateProgram();
 
@@ -98,6 +101,9 @@ public:
 	}
     void render()
     {
+        //glBindBuffer(GL_UNIFORM_BUFFER, gUBO);
+        //glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(myArray), myArray);
+
         glUseProgram(gProgramID);
         glBindBuffer(GL_ARRAY_BUFFER, gVBO);
         GLuint blockIndex = glGetUniformBlockIndex(gProgramID, "MyBlock");
@@ -115,6 +121,8 @@ public:
 
         commonGL->setVec2(gProgramID, "xy", x - width, y);
 
+        std::cout << myArray[50] << std::endl;
+
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     }
@@ -122,6 +130,12 @@ public:
     {
         this->x = x + width; // TODO: un argument daca vrem ca centrul sa fie intr-un colt sau la mijloc
         this->y = y + height;
+    }
+
+    ~visualFFT()
+    {
+        //delete myArray;
+        // este treaba celui care ne furnizeaza fftBins (in constructor) sa faca curatenie
     }
 private:
     int x, y, width, height;
