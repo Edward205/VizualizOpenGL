@@ -10,10 +10,7 @@ public:
 	{
         this->myArray = fftBins;
         this->commonGL = commonGL;
-        myArray[5] = 0.5f;
-        myArray[6] = 0.2f;
-        myArray[7] = 0.8f;
-        myArray[8] = 0.4f;
+
         // Program
         gProgramID = glCreateProgram();
 
@@ -77,12 +74,17 @@ public:
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
         glEnableVertexAttribArray(2);
 
+        /*
         // FFT texture attribute
         glGenBuffers(1, &gUBO);
         glBindBuffer(GL_UNIFORM_BUFFER, gUBO);
-        glBufferData(GL_UNIFORM_BUFFER, sizeof(myArray), myArray, GL_STATIC_DRAW);
+        glBufferData(GL_UNIFORM_BUFFER, sizeof(fftBins1), fftBins1, GL_STATIC_DRAW);
 
-        glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, gUBO);
+        glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, gUBO);*/
+
+        // Generate 2D Texture
+        updateTexture();
+        // Set texture wrapping and filtering
 
         // Check for errors
         std::cout << glGetError() << std::endl;
@@ -101,13 +103,17 @@ public:
 	}
     void render()
     {
-        //glBindBuffer(GL_UNIFORM_BUFFER, gUBO);
-        //glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(myArray), myArray);
+        updateTexture();
+        glBindTexture(GL_TEXTURE_1D, textureID);
 
+        //glBindBuffer(GL_UNIFORM_BUFFER, gUBO);
+        //glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(fftBins1), fftBins1);
+        
         glUseProgram(gProgramID);
         glBindBuffer(GL_ARRAY_BUFFER, gVBO);
-        GLuint blockIndex = glGetUniformBlockIndex(gProgramID, "MyBlock");
-        glUniformBlockBinding(gProgramID, blockIndex, bindingPoint);
+        
+        //GLuint blockIndex = glGetUniformBlockIndex(gProgramID, "MyBlock");
+        //glUniformBlockBinding(gProgramID, blockIndex, bindingPoint);
 
         commonGL->setMat4(gProgramID, "projection", commonGL->calculateProjection(640.0f, 480.0f)); // TODO: de optimizat, nu trebuie recalculata de fiecare data
 
@@ -121,10 +127,7 @@ public:
 
         commonGL->setVec2(gProgramID, "xy", x - width, y);
 
-        std::cout << myArray[50] << std::endl;
-
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
     }
     void setPosition(int x, int y)
     {
@@ -145,4 +148,25 @@ private:
     GLuint gVAO = 0;
     GLuint gUBO;
     GLuint bindingPoint = 0;
+    GLuint textureID;
+
+    void updateTexture() {
+        if (textureID == 0) {
+            // If textureID is not initialized, generate it
+            glGenTextures(1, &textureID);
+            glBindTexture(GL_TEXTURE_1D, textureID);
+
+            // Set the texture wrapping and filtering parameters
+            glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        }
+        else {
+            // If textureID is already initialized, just bind it
+            glBindTexture(GL_TEXTURE_1D, textureID);
+        }
+
+        // Set the texture data
+        glTexImage1D(GL_TEXTURE_1D, 0, GL_R32F, 1024, 0, GL_RED, GL_FLOAT, myArray);
+    }
 };
