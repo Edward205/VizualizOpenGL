@@ -158,7 +158,7 @@ bool initGL()
 	commonUI.use();
 
 	testButton.init(100, 100, 100, 100, "forward.png", &commonUI);
-	visual_fft.init(100, 200, 100, 100, &cacaGL, player.fftBins);
+	visual_fft.init(100, 200, 512, 100, &cacaGL, player.fftBins);
 
 	// Set the texture parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

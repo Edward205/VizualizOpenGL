@@ -2,6 +2,7 @@
 #include <portaudio.h>
 #include <sndfile.h>
 #include "kiss_fft.h"
+#include <vector>
 
 class WavPlayer {
 public:
@@ -58,16 +59,31 @@ public:
             Pa_WriteStream(stream, buffer, FRAMES_PER_BUFFER);
 
             // Prepare the input for FFT
+            applyHanningWindow(buffer, FRAMES_PER_BUFFER);
             for (sf_count_t i = 0; i < FRAMES_PER_BUFFER; ++i) {
-                fftInput[i].r = static_cast<float>(buffer[i]);
+                fftInput[i].r = buffer[i];
                 fftInput[i].i = 0.0f;
             }
 
             // Run FFT
             kiss_fft(fftCfg, fftInput, fftOutput);
-            for(int i = 0; i < FRAMES_PER_BUFFER; ++i)
-                fftBins[i] = sqrt(fftOutput[i].r * fftOutput[i].r + fftOutput[i].i * fftOutput[i].i) * 100;
+            float maxampl = -1000.0f;
+            float minampl = 1000.0f;
+            for (int i = 0; i < FRAMES_PER_BUFFER / 4; ++i)
+            {
+                float amplitude = sqrt(fftOutput[i].r * fftOutput[i].r + fftOutput[i].i * fftOutput[i].i);
+                maxampl = std::max(maxampl, amplitude);
+                minampl = std::min(maxampl, amplitude);
+                fftBins[i] = scaleValue(amplitude, 0.0f, 256.0f, 0.0f, 255.0f); // ???
+            }
+            std::cout << "max: " << maxampl << std::endl;
+            std::cout << "min: " << minampl << std::endl << std::endl;
 
+            /*for (int i = 0; i < FRAMES_PER_BUFFER; ++i) {
+                float frequency = i * SAMPLE_RATE / static_cast<float>(FRAMES_PER_BUFFER);
+                float amplitude = sqrt(fftOutput[i].r * fftOutput[i].r + fftOutput[i].i * fftOutput[i].i);
+                std::cout << "Bin " << i << ": Frequency = " << frequency << " Hz, Amplitude = " << amplitude << std::endl;
+            }*/
         }
     }
 
@@ -81,6 +97,26 @@ public:
 
         // Output the RMS volume level
         return rms;
+    }
+
+    void applyHanningWindow(float* data, size_t dataSize) {
+        for (size_t i = 0; i < dataSize; ++i) {
+            double multiplier = 0.5 * (1 - cos(2 * M_PI * i / (dataSize - 1)));
+            data[i] *= multiplier;
+        }
+    }
+
+    float scaleValue(float value, float oldMin, float oldMax, float newMin, float newMax) {
+        // Check for division by zero to avoid errors
+        if (oldMax - oldMin == 0) {
+            std::cerr << "Error: Division by zero in scaleValue function." << std::endl;
+            return value;
+        }
+
+        // Scale the value to the new range
+        float scaledValue = ((value - oldMin) / (oldMax - oldMin)) * (newMax - newMin) + newMin;
+
+        return scaledValue;
     }
 
 
@@ -101,6 +137,8 @@ public:
         }
 
         delete fftBins;
+        delete fftInput;
+        delete fftOutput;
     }
 
 private:
@@ -116,6 +154,6 @@ private:
 
 
     static constexpr int SAMPLE_RATE = 44100;
-    static constexpr int FRAMES_PER_BUFFER = 512;
+    static constexpr int FRAMES_PER_BUFFER = 1024;
 };
 
