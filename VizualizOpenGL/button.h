@@ -11,8 +11,6 @@ public:
 			std::cerr << "CommonUI is not initialised, cannot load a button." << std::endl;
 			return false;
 		}
-		commonUI->bind();
-		commonUI->use();
 
 		buttonTexture = loadTextureFromFile(texturePath);
 		if (buttonTexture == -1)
@@ -26,14 +24,15 @@ public:
 		this->width = width;
 		this->height = height;
 		this->commonUI = commonUI;
-
 	}
 
 	void render()
 	{
-		glBindTexture(GL_TEXTURE_2D, buttonTexture); //sper ca asta asa trebuie
+		glBindTexture(GL_TEXTURE_2D, buttonTexture);
 
+		commonUI->bind();
 		commonUI->use();
+
 		commonUI->setMat4("projection", commonUI->calculateProjection(640.0f, 480.0f));
 
 		glm::mat4 trans = glm::mat4(1.0f);
@@ -43,6 +42,8 @@ public:
 		glm::mat4 view = glm::mat4(1.0f);
 		view = glm::translate(view, glm::vec3(x, y, 0.0f));
 		commonUI->setMat4("view", view);
+
+		commonUI->setFloat("colorRatio", 0); // vrem doar textura, fara culoare
 
 		commonUI->render();
 	}

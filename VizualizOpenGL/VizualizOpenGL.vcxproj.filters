@@ -56,6 +56,9 @@
     <ClInclude Include="GLcommon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.glsl" />

@@ -4,7 +4,8 @@ CommonGL commonGL;
 class visualFFT {
 public:
     GLuint gProgramID;
-
+    int selectedAmplitude = -1;
+    double selectedAmplitudeLevel = 0;
     float *myArray;
 	bool init(int x, int y, int width, int height, CommonGL *commonGL, float *fftBins)
 	{
@@ -74,14 +75,6 @@ public:
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
         glEnableVertexAttribArray(2);
 
-        /*
-        // FFT texture attribute
-        glGenBuffers(1, &gUBO);
-        glBindBuffer(GL_UNIFORM_BUFFER, gUBO);
-        glBufferData(GL_UNIFORM_BUFFER, sizeof(fftBins1), fftBins1, GL_STATIC_DRAW);
-
-        glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, gUBO);*/
-
         // Generate 2D Texture
         updateTexture();
         // Set texture wrapping and filtering
@@ -128,11 +121,37 @@ public:
         commonGL->setVec2(gProgramID, "xy", x - width, y);
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        float amplitude = myArray[selectedAmplitude];
+        selectedAmplitudeLevel = amplitude;
     }
     void setPosition(int x, int y)
     {
         this->x = x + width; // TODO: un argument daca vrem ca centrul sa fie intr-un colt sau la mijloc
         this->y = y + height;
+    }
+    void handleInput(SDL_Event e)
+    {
+        if (e.type == SDL_MOUSEBUTTONDOWN)
+        {
+            int loc_x = e.button.x - (x - width), loc_y = e.button.y - (y - height);
+            if (loc_x > 0)
+            {
+                int SAMPLE_RATE = 441000;
+                int FRAMES_PER_BUFFER = 1024;
+
+                selectedAmplitude = loc_x;
+                std::cout << "Frecventa selectata = " << selectedAmplitude * SAMPLE_RATE / FRAMES_PER_BUFFER << std::endl;
+            }
+        }
+        if (e.type == SDL_KEYDOWN)
+        {
+            if (e.key.keysym.sym == 99)
+            {
+                selectedAmplitude = -1;
+                std::cout << "Amplitudine normala" << std::endl;
+            }
+        }
     }
 
     ~visualFFT()
@@ -167,6 +186,6 @@ private:
         }
 
         // Set the texture data
-        glTexImage1D(GL_TEXTURE_1D, 0, GL_R32F, 1024, 0, GL_RED, GL_FLOAT, myArray);
+        glTexImage1D(GL_TEXTURE_1D, 0, GL_R32F, 256, 0, GL_RED, GL_FLOAT, myArray);
     }
 };

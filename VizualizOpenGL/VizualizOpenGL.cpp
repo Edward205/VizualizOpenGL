@@ -23,6 +23,7 @@
 #include "button.h"
 #include "audio.h"
 #include "fft_visual.h"
+#include "ui.h"
 
 #include "kiss_fft.h"
 
@@ -53,10 +54,6 @@ void render();
 
 //Frees media and shuts down SDL
 void close();
-
-//Shader loading utility programs
-void printProgramLog(GLuint program);
-void printShaderLog(GLuint shader);
 
 //The window we'll be rendering to
 SDL_Window* gWindow = NULL;
@@ -141,6 +138,7 @@ CommonGL cacaGL;
 CommonUIShader commonUI;
 button testButton;
 visualFFT visual_fft;
+GradientBackground bottomGradient;
 double volumeLevel = 0;
 WavPlayer player("test.wav");
 
@@ -154,11 +152,21 @@ bool initGL()
 		return false; // TODO: cerr
 	if(!commonUI.init(&cacaGL))
 		return false;
-	commonUI.bind();
-	commonUI.use();
+
+
+	float colors[12] = {
+		1.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 1.0f,
+		1.0f, 1.0f, 0.0f,
+	};
+	bottomGradient.init(0, 400, 640, 80, &commonUI, colors);
+	// BUG: daca gradient este initializat dupa butoane, primim eroare de acces la randare
 
 	testButton.init(100, 100, 100, 100, "forward.png", &commonUI);
-	visual_fft.init(100, 200, 512, 100, &cacaGL, player.fftBins);
+	visual_fft.init(200, 330, 128, 60, &cacaGL, player.fftBins);
+	visual_fft.setPosition(200, 330); // de ce trebuie asta?
+
 
 	// Set the texture parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -173,12 +181,6 @@ bool initGL()
 
 void handleKeys(unsigned char key, int x, int y)
 {
-	//Toggle quad
-	if (key == 'q')
-	{
-		gRenderQuad = !gRenderQuad;
-	}
-
 	mousePos.first = x;
 	mousePos.second = y;
 }
@@ -192,22 +194,25 @@ void render()
 {
 	//Clear color buffer
 	glClear(GL_COLOR_BUFFER_BIT);
-	
-	//Render quad
-	if (gRenderQuad)
+
+	bottomGradient.render();
+
+	if (visual_fft.selectedAmplitude != -1)
 	{
-		testButton.setPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - volumeLevel*200);
-		testButton.render();
-
-		visual_fft.setPosition(mousePos.first, mousePos.second);
-		visual_fft.render();
-
-		//Disable vertex position
-		//glDisableVertexAttribArray( gVertexPos2DLocation );
-
-		//Unbind program
-		glUseProgram(NULL);
+		volumeLevel = visual_fft.selectedAmplitudeLevel;
 	}
+	testButton.setPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - volumeLevel * 200);
+	testButton.render();
+
+	visual_fft.render();
+
+
+	//Disable vertex position
+	//glDisableVertexAttribArray( gVertexPos2DLocation );
+
+	//Unbind program
+	glUseProgram(NULL);
+	
 }
 
 void close()
@@ -225,7 +230,16 @@ void close()
 
 int main(int argc, char* args[])
 {
-	player.init();
+
+	if (argc > 1)
+	{
+		player.init(args[1]);
+	}
+	else 
+	{
+		player.init("test.wav");
+	}
+
 	//Start up SDL and create window
 	if (!init())
 	{
@@ -242,8 +256,6 @@ int main(int argc, char* args[])
 		//Enable text input
 		//SDL_StartTextInput();
 
-			
-		
 		//While application is running
 		while (!quit)
 		{
@@ -253,6 +265,8 @@ int main(int argc, char* args[])
 				int x = 0, y = 0;
 				SDL_GetMouseState(&x, &y);
 				handleKeys(e.text.text[0], x, y);
+
+				visual_fft.handleInput(e);
 
 				//User requests quit
 				if (e.type == SDL_QUIT)
@@ -270,7 +284,6 @@ int main(int argc, char* args[])
 
 			player.play();
 			volumeLevel = player.processAudio();
-			//visual_fft.
 
 			SDL_GL_SwapWindow(gWindow);
 			//Update screen
