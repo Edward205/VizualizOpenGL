@@ -2,7 +2,6 @@
 #include <portaudio.h>
 #include <sndfile.h>
 #include "kiss_fft.h"
-#include <vector>
 
 class WavPlayer {
 public:
@@ -10,7 +9,7 @@ public:
 
     WavPlayer(const char* filename) : filename(filename), sndfile(nullptr), stream(nullptr) {}
 
-    bool init() {
+    bool init(const char* file) {
         // Initialize PortAudio
         if (Pa_Initialize() != paNoError) {
             std::cerr << "PortAudio initialization failed" << std::endl;
@@ -18,7 +17,7 @@ public:
         }
 
         // Open the WAV file using libsndfile
-        sndfile = sf_open(filename, SFM_READ, &sfinfo);
+        sndfile = sf_open(file, SFM_READ, &sfinfo);
         if (!sndfile) {
             std::cerr << "Error opening WAV file" << std::endl;
             return false;
@@ -67,17 +66,11 @@ public:
 
             // Run FFT
             kiss_fft(fftCfg, fftInput, fftOutput);
-            float maxampl = -1000.0f;
-            float minampl = 1000.0f;
             for (int i = 0; i < FRAMES_PER_BUFFER / 4; ++i)
             {
                 float amplitude = sqrt(fftOutput[i].r * fftOutput[i].r + fftOutput[i].i * fftOutput[i].i);
-                maxampl = std::max(maxampl, amplitude);
-                minampl = std::min(maxampl, amplitude);
-                fftBins[i] = scaleValue(amplitude, 0.0f, 256.0f, 0.0f, 255.0f); // ???
+                fftBins[i] = scaleValue(amplitude, 0.0f, 256.0f, 0.0f, 255.0f); // TODO: ???
             }
-            std::cout << "max: " << maxampl << std::endl;
-            std::cout << "min: " << minampl << std::endl << std::endl;
 
             /*for (int i = 0; i < FRAMES_PER_BUFFER; ++i) {
                 float frequency = i * SAMPLE_RATE / static_cast<float>(FRAMES_PER_BUFFER);

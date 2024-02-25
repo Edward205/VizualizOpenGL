@@ -55,9 +55,9 @@ public:
 
         //VBO data
         float vertices[] = {
-            // positions          // colors           // texture coords
-                1.0f,  1.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-                1.0f, -1.0f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+             // positions         // colors           // texture coords
+             1.0f,  1.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+             1.0f, -1.0f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
             -1.0f, -1.0f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
             -1.0f,  1.0f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
         };
@@ -88,7 +88,6 @@ public:
         // Check for errors
         std::cout << glGetError() << std::endl;
 
-
         //Create IBO
         glGenBuffers(1, &gIBO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIBO);
@@ -108,8 +107,8 @@ public:
     }
     void render()
     {
-        use();
-        bind();
+        //use();
+        //bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
 
@@ -120,6 +119,10 @@ public:
     void setVec4(const std::string& name, const glm::vec4& value) const
     {
         glUniform4fv(glGetUniformLocation(gProgramID, name.c_str()), 1, &value[0]);
+    }
+    void setFloat(const std::string& name, float value) const
+    {
+        glUniform1f(glGetUniformLocation(gProgramID, name.c_str()), value);
     }
     glm::mat4 calculateProjection(float screen_width, float screen_height)
     {

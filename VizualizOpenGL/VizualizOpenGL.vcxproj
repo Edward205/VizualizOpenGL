@@ -158,6 +158,7 @@
     <ClInclude Include="button.h" />
     <ClInclude Include="fft_visual.h" />
     <ClInclude Include="GLcommon.h" />
+    <ClInclude Include="ui.h" />
     <ClInclude Include="UIcommon.h" />
   </ItemGroup>
   <ItemGroup>
