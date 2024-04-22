@@ -1,0 +1,7 @@
+TODO:
+
+de organizat main
+
+de testat totul pentru leak-uri de memorie (metoda while cu alocare/dealocare)
+de facut sens din ce cacat se intampla in FFT
+de schimbat numele variabilelor si comentariile

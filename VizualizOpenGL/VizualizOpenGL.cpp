@@ -141,7 +141,7 @@ visualFFT visual_fft;
 GradientBackground bottomGradient;
 double volumeLevel = 0;
 WavPlayer player("test.wav");
-
+TextRenderer text;
 bool initGL()
 {
 	//Success flag
@@ -153,6 +153,9 @@ bool initGL()
 	if(!commonUI.init(&cacaGL))
 		return false;
 
+	if (!text.init())
+		return false;
+
 
 	float colors[12] = {
 		1.0f, 0.0f, 0.0f,
@@ -160,7 +163,7 @@ bool initGL()
 		0.0f, 0.0f, 1.0f,
 		1.0f, 1.0f, 0.0f,
 	};
-	bottomGradient.init(0, 400, 640, 80, &commonUI, colors);
+	bottomGradient.init(0, 400, 300, 80, &commonUI, colors);
 	// BUG: daca gradient este initializat dupa butoane, primim eroare de acces la randare
 
 	testButton.init(100, 100, 100, 100, "forward.png", &commonUI);
@@ -230,7 +233,6 @@ void close()
 
 int main(int argc, char* args[])
 {
-
 	if (argc > 1)
 	{
 		player.init(args[1]);

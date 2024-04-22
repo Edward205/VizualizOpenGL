@@ -65,5 +65,10 @@
     <None Include="vertex.glsl" />
     <None Include="fft_vertex.glsl" />
     <None Include="fft_fragment.glsl" />
+    <None Include="resources\shaders\text.vert" />
+    <None Include="resources\shaders\text.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="todo.txt" />
   </ItemGroup>
 </Project>

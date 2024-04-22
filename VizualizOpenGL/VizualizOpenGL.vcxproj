@@ -116,13 +116,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\biblioteci\kissfft\include;C:\biblioteci\libsndfile-1.2.2-win64\include;C:\biblioteci\portaudio\include;C:\biblioteci\fftw-3.3.5-dll64;C:\biblioteci\glm-1.0.0-light;C:\biblioteci\SDL2_image-devel-2.8.2-VC\SDL2_image-2.8.2\include;C:\Users\edwar\source\repos\VizualizOpenGL\VizualizOpenGL\include;C:\biblioteci\SDL2-2.26.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\biblioteci\freetype-windows-binaries-2.13.2\include\;C:\biblioteci\kissfft\include;C:\biblioteci\libsndfile-1.2.2-win64\include;C:\biblioteci\portaudio\include;C:\biblioteci\fftw-3.3.5-dll64;C:\biblioteci\glm-1.0.0-light;C:\biblioteci\SDL2_image-devel-2.8.2-VC\SDL2_image-2.8.2\include;C:\Users\edwar\source\repos\VizualizOpenGL\VizualizOpenGL\include;C:\biblioteci\SDL2-2.26.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\biblioteci\kissfft\lib;C:\biblioteci\portaudio_x64;C:\biblioteci\libsndfile-1.2.2-win64\lib;C:\biblioteci\fftw-3.3.5-dll64;C:\biblioteci\glew-2.1.0-win32\glew-2.1.0\lib\Release\x64;C:\biblioteci\SDL2-2.26.5\lib\x64;C:\biblioteci\SDL2_image-devel-2.8.2-VC\SDL2_image-2.8.2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2main.lib;SDL2.lib;glew32.lib;SDL2_image.lib;libfftw3-3.lib;libfftw3f-3.lib;libfftw3l-3.lib;sndfile.lib;portaudio_x64.lib;kissfft-float.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\biblioteci\freetype-windows-binaries-2.13.2\release static\vs2015-2022\win64;C:\biblioteci\kissfft\lib;C:\biblioteci\portaudio_x64;C:\biblioteci\libsndfile-1.2.2-win64\lib;C:\biblioteci\fftw-3.3.5-dll64;C:\biblioteci\glew-2.1.0-win32\glew-2.1.0\lib\Release\x64;C:\biblioteci\SDL2-2.26.5\lib\x64;C:\biblioteci\SDL2_image-devel-2.8.2-VC\SDL2_image-2.8.2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2main.lib;SDL2.lib;glew32.lib;SDL2_image.lib;libfftw3-3.lib;libfftw3f-3.lib;libfftw3l-3.lib;sndfile.lib;portaudio_x64.lib;kissfft-float.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -133,15 +133,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\biblioteci\kissfft\include;C:\biblioteci\libsndfile-1.2.2-win64\include;C:\biblioteci\portaudio\include;C:\biblioteci\fftw-3.3.5-dll64;C:\biblioteci\glm-1.0.0-light;C:\biblioteci\SDL2_image-devel-2.8.2-VC\SDL2_image-2.8.2\include;C:\Users\edwar\source\repos\VizualizOpenGL\VizualizOpenGL\include;C:\biblioteci\SDL2-2.26.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\biblioteci\freetype-windows-binaries-2.13.2\include\;C:\biblioteci\kissfft\include;C:\biblioteci\libsndfile-1.2.2-win64\include;C:\biblioteci\portaudio\include;C:\biblioteci\fftw-3.3.5-dll64;C:\biblioteci\glm-1.0.0-light;C:\biblioteci\SDL2_image-devel-2.8.2-VC\SDL2_image-2.8.2\include;C:\Users\edwar\source\repos\VizualizOpenGL\VizualizOpenGL\include;C:\biblioteci\SDL2-2.26.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\biblioteci\kissfft\lib;C:\biblioteci\portaudio_x64;C:\biblioteci\libsndfile-1.2.2-win64\lib;C:\biblioteci\fftw-3.3.5-dll64;C:\biblioteci\glew-2.1.0-win32\glew-2.1.0\lib\Release\x64;C:\biblioteci\SDL2-2.26.5\lib\x64;C:\biblioteci\SDL2_image-devel-2.8.2-VC\SDL2_image-2.8.2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2main.lib;SDL2.lib;glew32.lib;SDL2_image.lib;libfftw3-3.lib;libfftw3f-3.lib;libfftw3l-3.lib;sndfile.lib;portaudio_x64.lib;kissfft-float.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\biblioteci\freetype-windows-binaries-2.13.2\release static\vs2015-2022\win64;C:\biblioteci\kissfft\lib;C:\biblioteci\portaudio_x64;C:\biblioteci\libsndfile-1.2.2-win64\lib;C:\biblioteci\fftw-3.3.5-dll64;C:\biblioteci\glew-2.1.0-win32\glew-2.1.0\lib\Release\x64;C:\biblioteci\SDL2-2.26.5\lib\x64;C:\biblioteci\SDL2_image-devel-2.8.2-VC\SDL2_image-2.8.2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2main.lib;SDL2.lib;glew32.lib;SDL2_image.lib;libfftw3-3.lib;libfftw3f-3.lib;libfftw3l-3.lib;sndfile.lib;portaudio_x64.lib;kissfft-float.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -165,7 +165,12 @@
     <None Include="fft_fragment.glsl" />
     <None Include="fft_vertex.glsl" />
     <None Include="fragment.glsl" />
+    <None Include="resources\shaders\text.frag" />
+    <None Include="resources\shaders\text.vert" />
     <None Include="vertex.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="todo.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
